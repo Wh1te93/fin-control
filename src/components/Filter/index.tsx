@@ -1,4 +1,12 @@
+import { useState } from "react";
 import { MenuItem, Select, Stack, Typography } from "@mui/material";
+
+import {
+  categoryFilterTitle,
+  categoryFilterWrapper,
+  filterItem,
+  filterItemValueWrapper,
+} from "./styles";
 
 const FILTERS = [
   {
@@ -15,62 +23,43 @@ const FILTERS = [
   },
 ];
 
+const CATEGORY_FILTER_OPTIONS = [
+  {
+    value: 1,
+    name: "Все",
+  },
+  {
+    value: 2,
+    name: "Джинсы",
+  },
+  {
+    value: 3,
+    name: "Брюки",
+  },
+  {
+    value: 4,
+    name: "Кардиган",
+  },
+];
+
 export const Filter = () => {
+  const [category, setCategory] = useState(1);
+
   return (
     <Stack direction="row" spacing={1} sx={{ marginBottom: "10px" }}>
       {FILTERS.map((el, index) => (
-        <Stack
-          key={index}
-          direction="row"
-          spacing={1}
-          sx={{
-            display: "inline-flex",
-            alignItems: "center",
-            minHeight: "50px",
-            padding: "6px 8px",
-            border: "solid 1px #e4e6e7",
-            borderRadius: "18px",
-            backgroundColor: "#fff",
-          }}
-        >
+        <Stack key={index} direction="row" spacing={1} sx={filterItem}>
           <Typography sx={{ fontSize: "14px" }}>{el.name}</Typography>
-          <Typography
-            sx={{
-              fontSize: "14px",
-              lineHeight: "12px",
-              color: "#bbbdc1",
-              padding: "14px 12px",
-              borderRadius: "12px",
-              backgroundColor: "#f5f6f6",
-            }}
-          >
-            {el.value}
-          </Typography>
+          <Typography sx={filterItemValueWrapper}>{el.value}</Typography>
         </Stack>
       ))}
-      <Stack
-        sx={{
-          minHeight: "50px",
-          padding: "6px 8px",
-          border: "solid 1px #e4e6e7",
-          borderRadius: "18px",
-          backgroundColor: "#fff",
-          justifyContent: "space-between",
-        }}
-      >
-        <Typography
-          sx={{ fontSize: "14px", lineHeight: "12px", color: "#bbbdc1" }}
-        >
-          Категория
-        </Typography>
+      <Stack sx={categoryFilterWrapper}>
+        <Typography sx={categoryFilterTitle}>Категория</Typography>
         <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value={1}
-          onChange={() => {}}
-          label="Age"
+          value={category}
+          onChange={(val) => setCategory(Number(val.target.value))}
           variant="standard"
-          disableUnderline={true}
+          disableUnderline
           sx={{
             fontSize: "14px",
             ".MuiInputBase-input": {
@@ -78,12 +67,11 @@ export const Filter = () => {
             },
           }}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={1}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
+          {CATEGORY_FILTER_OPTIONS.map((el, index) => (
+            <MenuItem key={index} value={el.value}>
+              {el.name}
+            </MenuItem>
+          ))}
         </Select>
       </Stack>
     </Stack>

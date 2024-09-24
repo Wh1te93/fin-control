@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
-import { Feed, FileDownload, QuestionAnswer } from "@mui/icons-material";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import { Product } from "types";
+import { Box, Container, Stack } from "@mui/material";
+import { Product, ProductFields } from "types";
 
 import { Contacts } from "components/Contacts";
+import { ContactUsButton } from "components/ContactUsButton";
 import { DashboardHeader } from "components/DashboardHeader";
+import { DashboardSubHeader } from "components/DashboardSubHeader";
 import { Filter } from "components/Filter";
+import { FilterButtonsPanel } from "components/FilterButtonsPanel";
 import { Menu } from "components/Menu";
 import { Table } from "components/Table";
 import { TableButtonsPanel } from "components/TableButtonsPanel";
@@ -26,25 +28,16 @@ export const Home = () => {
     [products],
   );
 
-  const onChangeItem = (
-    id: number,
-    field:
-      | "id"
-      | "barcode"
-      | "type"
-      | "article"
-      | "size"
-      | "quantity"
-      | "productsInTransit"
-      | "totalCount",
-    value: string,
-  ) => {
+  const onChangeItem = (id: number, field: ProductFields, value: string) => {
     const newProducts = [...products];
-
     const index = newProducts.findIndex((el) => el.id === id);
 
     if (newProducts[index]) {
-      if (field === "productsInTransit") {
+      if (
+        field === "productsInTransit" ||
+        field === "quantity" ||
+        field === "totalCount"
+      ) {
         newProducts[index][field] = Number(value);
         setProducts(newProducts);
       }
@@ -59,73 +52,18 @@ export const Home = () => {
             <Box sx={{ width: "270px" }}>
               <Menu />
               <Contacts />
-              <Button
-                variant="contained"
-                sx={{
-                  textTransform: "none",
-                  width: "100%",
-                  height: "60px",
-                  marginTop: "6px",
-                  borderRadius: "18px",
-                }}
-              >
-                <QuestionAnswer sx={{ marginRight: "8px" }} />
-                Связаться с нами
-              </Button>
+              <ContactUsButton />
             </Box>
           </div>
           <Box sx={{ flexGrow: 1, overflowX: "hidden" }}>
             <DashboardHeader />
-            <Stack
-              spacing={2}
-              direction="row"
-              sx={{
-                alignItems: "center",
-                marginBottom: "20px",
-              }}
-            >
-              <Typography sx={{ fontSize: "24px" }}>
-                Остаки сформированы на 01.04.2023 г.
-              </Typography>
-              <Button
-                variant="contained"
-                startIcon={<Feed />}
-                sx={{
-                  textTransform: "none",
-                  backgroundColor: "#111621",
-                  borderRadius: "20px/50%",
-                }}
-              >
-                Инструкции
-              </Button>
-            </Stack>
+            <DashboardSubHeader />
             <Filter />
-            <Stack direction="row" spacing={1} sx={{ marginBottom: "20px" }}>
-              <Button
-                variant="contained"
-                sx={{
-                  textTransform: "none",
-                  borderRadius: "20px/50%",
-                }}
-              >
-                Сформировать
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<FileDownload />}
-                href={`data:text/json;charset=utf-8,${encodeURIComponent(
-                  JSON.stringify(products),
-                )}`}
-                download="filename.json"
-                sx={{
-                  textTransform: "none",
-                  backgroundColor: "#111621",
-                  borderRadius: "20px/50%",
-                }}
-              >
-                Экспорт
-              </Button>
-            </Stack>
+            <FilterButtonsPanel
+              exportToFileLink={`data:text/json;charset=utf-8,${encodeURIComponent(
+                JSON.stringify(products),
+              )}`}
+            />
             <TableButtonsPanel setProducts={setProducts} />
             <Table
               selectedItem={null}

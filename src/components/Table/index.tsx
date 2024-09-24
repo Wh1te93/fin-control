@@ -5,54 +5,11 @@ import MuiTable from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
 import { Product } from "types";
 
-import { EnhancedTableHeadProps, EnhancedTableProps, headCells } from "./types";
-
-function EnhancedTableHead({
-  order,
-  orderBy,
-  onRequestSort,
-}: EnhancedTableHeadProps) {
-  const createSortHandler =
-    (property: string) => (event: MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
-  return (
-    <TableHead sx={{ position: "sticky", top: 0, backgroundColor: "#fff" }}>
-      <TableRow>
-        {headCells.map((headCell, index) => (
-          <TableCell
-            key={headCell.id}
-            sortDirection={orderBy === headCell.id ? order : false}
-            align={headCell.sortEnabled ? "right" : "left"}
-            sx={{
-              paddingLeft: index === 0 ? 0 : undefined,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {headCell.sortEnabled ? (
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}
-                sx={{ width: "100%", justifyContent: "flex-end" }}
-              >
-                {headCell.label}
-              </TableSortLabel>
-            ) : (
-              headCell.label
-            )}
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
+import { TableHead } from "./TableHead";
+import { EnhancedTableProps } from "./types";
 
 export const Table = forwardRef(
   (
@@ -146,7 +103,7 @@ export const Table = forwardRef(
               <col width="16%" />
               <col width="20%" />
             </colgroup>
-            <EnhancedTableHead
+            <TableHead
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
@@ -175,17 +132,33 @@ export const Table = forwardRef(
                       {row.barcode}
                     </TableCell>
                     <TableCell>{row.type}</TableCell>
-                    <TableCell sx={{ paddingLeft: "42px" }}>
-                      {row.article}
-                    </TableCell>
-                    <TableCell sx={{ paddingLeft: "42px" }}>
-                      {row.size}
-                    </TableCell>
-                    <TableCell sx={{ paddingLeft: "42px" }}>
-                      {row.quantity}
+                    <TableCell>{row.article}</TableCell>
+                    <TableCell>{row.size}</TableCell>
+                    <TableCell
+                      onDoubleClick={() =>
+                        setEditCell({ id: row.id, field: "quantity" })
+                      }
+                    >
+                      {editCell &&
+                      row.id === editCell?.id &&
+                      editCell.field === "quantity" ? (
+                        <TextField
+                          variant="standard"
+                          autoFocus
+                          value={row.quantity}
+                          type="number"
+                          onChange={(e) =>
+                            onChange
+                              ? onChange(row.id, "quantity", e.target.value)
+                              : undefined
+                          }
+                          onBlur={() => setEditCell(null)}
+                        />
+                      ) : (
+                        row.quantity
+                      )}
                     </TableCell>
                     <TableCell
-                      sx={{ paddingLeft: "42px" }}
                       onDoubleClick={() =>
                         setEditCell({ id: row.id, field: "productsInTransit" })
                       }
@@ -197,6 +170,7 @@ export const Table = forwardRef(
                           variant="standard"
                           autoFocus
                           value={row.productsInTransit}
+                          type="number"
                           onChange={(e) =>
                             onChange
                               ? onChange(
@@ -212,8 +186,29 @@ export const Table = forwardRef(
                         row.productsInTransit
                       )}
                     </TableCell>
-                    <TableCell sx={{ paddingLeft: "42px" }}>
-                      {row.totalCount}
+                    <TableCell
+                      onDoubleClick={() =>
+                        setEditCell({ id: row.id, field: "totalCount" })
+                      }
+                    >
+                      {editCell &&
+                      row.id === editCell?.id &&
+                      editCell.field === "totalCount" ? (
+                        <TextField
+                          variant="standard"
+                          autoFocus
+                          value={row.totalCount}
+                          type="number"
+                          onChange={(e) =>
+                            onChange
+                              ? onChange(row.id, "totalCount", e.target.value)
+                              : undefined
+                          }
+                          onBlur={() => setEditCell(null)}
+                        />
+                      ) : (
+                        row.totalCount
+                      )}
                     </TableCell>
                   </TableRow>
                 );
@@ -231,12 +226,8 @@ export const Table = forwardRef(
                 }}
               >
                 <TableCell colSpan={5}>Итого:</TableCell>
-                <TableCell sx={{ paddingLeft: "42px" }}>
-                  {summaryRow?.productsInTransit}
-                </TableCell>
-                <TableCell sx={{ paddingLeft: "42px" }}>
-                  {summaryRow?.totalCount}
-                </TableCell>
+                <TableCell>{summaryRow?.productsInTransit}</TableCell>
+                <TableCell>{summaryRow?.totalCount}</TableCell>
               </TableRow>
             </TableBody>
           </MuiTable>

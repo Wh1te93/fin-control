@@ -27,35 +27,35 @@ export const headCells: readonly HeadCell[] = [
     id: "article",
     numeric: false,
     label: "Артикул",
-    sortEnabled: true,
+    sortEnabled: false,
   },
   {
     id: "size",
     numeric: false,
     label: "Размер",
-    sortEnabled: true,
+    sortEnabled: false,
   },
   {
     id: "quantity",
     numeric: true,
     label: "Доступно к заказу",
-    sortEnabled: true,
+    sortEnabled: false,
   },
   {
     id: "productsInTransit",
     numeric: true,
     label: "Товары в пути",
-    sortEnabled: true,
+    sortEnabled: false,
   },
   {
     id: "totalCount",
     numeric: true,
     label: "Итого кол-во товара",
-    sortEnabled: true,
+    sortEnabled: false,
   },
 ];
 
-export type EnhancedTableHeadProps = {
+export type tableHeadProps = {
   onRequestSort: (event: MouseEvent<unknown>, property: string) => void;
   order: Order;
   orderBy: string;

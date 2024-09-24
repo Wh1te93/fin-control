@@ -8,3 +8,5 @@ export type Product = {
   productsInTransit: number;
   totalCount: number;
 };
+
+export type ProductFields = keyof Product;

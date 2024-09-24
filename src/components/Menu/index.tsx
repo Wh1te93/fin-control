@@ -1,11 +1,35 @@
 import { useState } from "react";
-import { ArrowDropDown, Clear } from "@mui/icons-material";
+import {
+  ArrowDropDown,
+  Clear,
+  PostAdd,
+  Settings,
+  Source,
+  Summarize,
+} from "@mui/icons-material";
 import { Box, Button, Collapse, Stack } from "@mui/material";
 
-import AddData from "./AddData";
-import KnowledgeBase from "./KnowledgeBase";
-import Reports from "./Reports";
-import Settings from "./Settings";
+import { MenuItem } from "./MenuItem";
+import {
+  menuButton,
+  menuHeader,
+  menuHeaderTitleWrapper,
+  menuWrapper,
+} from "./styles";
+
+const SUB_MENU_ITEMS = [
+  { name: "пункт 1", path: "#" },
+  { name: "пункт 2", path: "#" },
+  { name: "пункт 3", path: "#" },
+  { name: "пункт 4", path: "#" },
+];
+
+const MENU_ITEMS = [
+  { name: "Настройки", subMenuItems: SUB_MENU_ITEMS, Icon: Settings },
+  { name: "Внесение данных", subMenuItems: SUB_MENU_ITEMS, Icon: PostAdd },
+  { name: "Отчеты", subMenuItems: SUB_MENU_ITEMS, Icon: Summarize },
+  { name: "База знаний", subMenuItems: SUB_MENU_ITEMS, Icon: Source },
+];
 
 export const Menu = () => {
   const [open, setOpen] = useState(true);
@@ -15,61 +39,32 @@ export const Menu = () => {
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#111621",
-        color: "#fff",
-        padding: "8px",
-        borderRadius: "18px",
-      }}
-    >
-      <Stack
-        direction="row"
-        sx={{
-          alignItems: "center",
-          marginBottom: "12px",
-          justifyContent: "space-between",
-          padding: "6px",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            component="span"
-            sx={{
-              backgroundColor: "#287eff",
-              padding: "2px",
-              marginRight: "4px",
-              borderRadius: "4px",
-            }}
-          >
+    <Box sx={menuWrapper}>
+      <Stack direction="row" sx={menuHeader}>
+        <Stack direction="row" sx={{ alignItems: "center" }}>
+          <Box component="span" sx={menuHeaderTitleWrapper}>
             ФИН
           </Box>{" "}
           Контроль
-        </Box>
+        </Stack>
         <Button
           variant="contained"
           onClick={handleClick}
           endIcon={open ? <Clear /> : <ArrowDropDown />}
-          sx={{
-            color: "#58658a",
-            backgroundColor: "#1d2438",
-            borderRadius: "20px/50%",
-            textTransform: "none",
-          }}
+          sx={menuButton}
         >
           Меню
         </Button>
       </Stack>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <Settings />
-        <AddData />
-        <Reports />
-        <KnowledgeBase />
+        {MENU_ITEMS.map((el, index) => (
+          <MenuItem
+            key={index}
+            name={el.name}
+            subMenuItems={el.subMenuItems}
+            Icon={el.Icon}
+          />
+        ))}
       </Collapse>
     </Box>
   );
